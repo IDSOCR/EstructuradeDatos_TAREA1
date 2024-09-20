@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios de Matrices, Vectores y Recursividad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[type="number"] {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .result {
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Ejercicios de Matrices, Vectores y Recursividad</h1>
+    <div class="container">
+
+        <!-- Sección de Matrices -->
+        <div class="section">
+            <h2>Matrices</h2>
+            <p>Ejercicio#1: Realizar una matriz de 3 x 3, llenarla con números aleatorios, imprimir la matriz y la sumatoria de las diagonales.</p>
+            <button onclick="generarMatriz()">Generar Matriz y Calcular Diagonales</button>
+            <div class="result" id="resultadoMatriz"></div>
+        </div>
+
+        <!-- Sección de Vectores -->
+        <div class="section">
+            <h2>Vectores</h2>
+            <p>Estación Meteorológica: Realice las siguientes acciones con un vector de temperaturas.</p>
+            <button onclick="mostrarMenu()">Mostrar Menú</button>
+            <div class="result" id="resultadoVector"></div>
+        </div>
+
+        <!-- Sección de Recursividad -->
+        <div class="section">
+            <h2>Recursividad</h2>
+            <p>1. Calcular la potencia de un número.</p>
+            <p>2. Sumar los dígitos de un número.</p>
+            <div>
+                <input type="number" id="base" placeholder="Base" />
+                <input type="number" id="exponente" placeholder="Exponente" />
+                <button onclick="calcularPotencia()">Calcular Potencia</button>
+            </div>
+            <div class="result" id="resultadoPotencia"></div>
+
+            <div>
+                <input type="number" id="numeroDigitos" placeholder="Número" />
+                <button onclick="sumarDigitos()">Sumar Dígitos</button>
+            </div>
+            <div class="result" id="resultadoSumaDigitos"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // Función para generar una matriz 3x3 y calcular la suma de las diagonales
+        function generarMatriz() {
+            const matriz = [];
+            let diagonalPrincipal = 0;
+            let diagonalSecundaria = 0;
+
+            for (let i = 0; i < 3; i++) {
+                matriz[i] = [];
+                for (let j = 0; j < 3; j++) {
+                    matriz[i][j] = Math.floor(Math.random() * 100);
+                    if (i === j) diagonalPrincipal += matriz[i][j];
+                    if (i + j === 2) diagonalSecundaria += matriz[i][j];
+                }
+            }
+
+            let matrizHTML = "<h3>Matriz Generada</h3><table>";
+            matriz.forEach(fila => {
+                matrizHTML += "<tr>";
+                fila.forEach(valor => {
+                    matrizHTML += `<td>${valor}</td>`;
+                });
+                matrizHTML += "</tr>";
+            });
+            matrizHTML += "</table>";
+            matrizHTML += `<p>Suma Diagonal Principal: ${diagonalPrincipal}</p>`;
+            matrizHTML += `<p>Suma Diagonal Secundaria: ${diagonalSecundaria}</p>`;
+
+            document.getElementById("resultadoMatriz").innerHTML = matrizHTML;
+            document.getElementById("resultadoMatriz").style.display = "block";
+        }
+
+        // Vector de temperaturas y su manejo
+        let temperaturas = Array.from({ length: 15 }, () => Math.floor(Math.random() * 41));
+        
+        function mostrarMenu() {
+            const menu = `
+                <h3>Menú de Opciones</h3>
+                <ul>
+                    <li><button onclick="mostrarDatos()">Mostrar Datos</button></li>
+                    <li><button onclick="obtenerMaxMin()">Obtener Máximos y Mínimos</button></li>
+                    <li><button onclick="calcularPromedio()">Calcular Promedio</button></li>
+                    <li><button onclick="modificarTemperatura()">Modificar Temperatura</button></li>
+                    <li><button onclick="eliminarTemperatura()">Eliminar Temperatura</button></li>
+                </ul>
+            `;
+            document.getElementById("resultadoVector").innerHTML = menu;
+            document.getElementById("resultadoVector").style.display = "block";
+        }
+
+        function mostrarDatos() {
+            alert("Datos: " + temperaturas.join(", "));
+        }
+
+        function obtenerMaxMin() {
+            const maxTemp = Math.max(...temperaturas);
+            const minTemp = Math.min(...temperaturas);
+            alert(`Temperatura Máxima: ${maxTemp}°C, Temperatura Mínima: ${minTemp}°C`);
+        }
+
+        function calcularPromedio() {
+            const promedio = temperaturas.reduce((a, b) => a + b) / temperaturas.length;
+            alert(`Promedio de Temperaturas: ${promedio.toFixed(2)}°C`);
+        }
+
+        function modificarTemperatura() {
+            const index = prompt("Ingrese el índice (0-14) de la temperatura a modificar:");
+            if (index >= 0 && index < temperaturas.length) {
+                const nuevaTemp = prompt("Ingrese la nueva temperatura:");
+                if (nuevaTemp >= 0 && nuevaTemp <= 40) {
+                    temperaturas[index] = Number(nuevaTemp);
+                    alert("Temperatura modificada.");
+                } else {
+                    alert("Temperatura inválida. Debe estar entre 0 y 40.");
+                }
+            } else {
+                alert("Índice inválido.");
+            }
+        }
+
+        function eliminarTemperatura() {
+            const index = prompt("Ingrese el índice (0-14) de la temperatura a eliminar:");
+            if (index >= 0 && index < temperaturas.length) {
+                temperaturas.splice(index, 1);
+                alert("Temperatura eliminada.");
+            } else {
+                alert("Índice inválido.");
+            }
+        }
+
+        // Función para calcular la potencia de un número usando recursividad
+        function calcularPotencia() {
+            const base = document.getElementById("base").value;
+            const exponente = document.getElementById("exponente").value;
+
+            function potencia(base, exponente) {
+                if (exponente == 0) return 1;
+                return base * potencia(base, exponente - 1);
+            }
+
+            const resultado = potencia(base, exponente);
+            document.getElementById("resultadoPotencia").innerHTML = `Resultado: ${resultado}`;
+            document.getElementById("resultadoPotencia").style.display = "block";
+        }
+
+        // Función para sumar los dígitos de un número usando recursividad
+        function sumarDigitos() {
+            const numero = document.getElementById("numeroDigitos").value;
+
+            function sumaDigitos(num) {
+                if (num == 0) return 0;
+                return num % 10 + sumaDigitos(Math.floor(num / 10));
+            }
+
+            const resultado = sumaDigitos(numero);
+            document.getElementById("resultadoSumaDigitos").innerHTML = `Resultado: ${resultado}`;
+            document.getElementById("resultadoSumaDigitos").style.display = "block";
+        }
+
+    </script>
+
+    <!-- autor -->
+    <footer>
+        <p style="text-align: center; margin-top: 20px;">Realizado por Ivar David Solera Quesada</p>
+    </footer>
+</body>
+</html>
